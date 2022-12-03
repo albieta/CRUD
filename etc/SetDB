@@ -1,0 +1,18 @@
+create table User (
+    userId          VARCHAR(50),
+    userName        VARCHAR(50),
+    userSurname     VARCHAR(50),
+    processedOrders VARCHAR(200)
+);
+
+create table Product (
+    productId           VARCHAR(50),
+    productName         VARCHAR(50),
+    price               INT(10),
+    numSales            INT(10)
+);
+
+create table Order (
+    userId      VARCHAR(50),
+    elements    VARCHAR(50)
+);
