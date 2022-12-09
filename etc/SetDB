@@ -11,8 +11,3 @@ create table Product (
     price               INT(10),
     numSales            INT(10)
 );
-
-create table Order (
-    userId      VARCHAR(50),
-    elements    VARCHAR(50)
-);

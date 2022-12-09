@@ -24,8 +24,7 @@ public class ObjectHelper {
     }
 
     public static void setter(Object object, String property, Object value) throws NoSuchFieldException, IllegalAccessException, InvocationTargetException {
-        List<Method> methods = Arrays.stream(object.getClass().getMethods()).toList();
-        Method method = methods.stream()
+        Method method = Arrays.stream(object.getClass().getMethods())
                 .filter(x-> x.getName().matches("(?i).*"+"set"+property+".*"))
                 .findFirst()
                 .orElse(null);
@@ -34,8 +33,7 @@ public class ObjectHelper {
     }
 
     public static Object getter(Object object, String property) throws NoSuchFieldException, IllegalAccessException, InvocationTargetException {
-        List<Method> methods = Arrays.stream(object.getClass().getMethods()).toList();
-        Method method = methods.stream()
+        Method method = Arrays.stream(object.getClass().getMethods())
                 .filter(x-> x.getName().matches("(?i).*"+"get"+property+".*"))
                 .findFirst()
                 .orElse(null);

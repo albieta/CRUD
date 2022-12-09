@@ -27,8 +27,7 @@ public class QueryHelper {
     }
 
     public static String createQuerySELECT(Object entity) throws NoSuchFieldException, InvocationTargetException, IllegalAccessException {
-        List<String> fields = Arrays.stream(ObjectHelper.getFields(entity)).toList();
-        String field = fields.stream()
+        String field = Arrays.stream(ObjectHelper.getFields(entity))
                 .filter(x-> x.matches("(?i).*"+"id"+".*"))
                 .findFirst()
                 .orElse(null);
