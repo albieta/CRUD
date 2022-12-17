@@ -10,15 +10,21 @@ public class User {
 
     String userSurname;
 
-    List<String> processedOrders;
+    String userEmail;
+
+    String userPassword;
+
+    String processedOrders;
 
     public User(){}
 
-    public User(String userId, String userName, String userSurname){
+    public User(String userId, String userName, String userSurname, String userEmail, String userPassword){
         this.userId = userId;
         this.userName = userName;
         this.userSurname = userSurname;
-        this.processedOrders = new LinkedList<>();
+        this.userEmail = userEmail;
+        this.userPassword = userPassword;
+        this.processedOrders = "[]";
     }
     public String getUserId() {
         return userId;
@@ -44,15 +50,27 @@ public class User {
         this.userSurname = userSurname;
     }
 
-    public void addProcessedOrder(String order) {
-        this.processedOrders.add(order);
-    }
-
-    public List<String> getProcessedOrders() {
+    public String getProcessedOrders() {
         return this.processedOrders;
     }
 
-    public void setProcessedOrders(List<String> processedOrders) {
+    public void setProcessedOrders(String processedOrders) {
         this.processedOrders = processedOrders;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public String getUserPassword() {
+        return userPassword;
+    }
+
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
     }
 }

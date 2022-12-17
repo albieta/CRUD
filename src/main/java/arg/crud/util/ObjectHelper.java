@@ -41,9 +41,9 @@ public class ObjectHelper {
         return method.invoke(object,null);
     }
 
-    public static String getIdAttributeName(Class theClass) {
+    public static String getAttributeName(Class theClass, String attribute) {
         Field field = Arrays.stream(theClass.getDeclaredFields())
-                .filter(x->x.getName().matches("(?i).*id.*"))
+                .filter(x->x.getName().matches("(?i).*"+attribute+".*"))
                 .findFirst()
                 .orElse(null);
         assert field != null;

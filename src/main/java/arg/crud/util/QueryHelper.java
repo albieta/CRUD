@@ -1,8 +1,9 @@
 package arg.crud.util;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+
+import static arg.crud.util.ObjectHelper.getAttributeName;
 
 public class QueryHelper {
     public static String createQueryINSERT(Object entity) throws NoSuchFieldException, InvocationTargetException, IllegalAccessException {
@@ -26,16 +27,27 @@ public class QueryHelper {
         return buffer.toString();
     }
 
-    public static String createQuerySELECT(Object entity) throws NoSuchFieldException, InvocationTargetException, IllegalAccessException {
-        String field = Arrays.stream(ObjectHelper.getFields(entity))
-                .filter(x-> x.matches("(?i).*"+"id"+".*"))
-                .findFirst()
-                .orElse(null);
+    public static String createQuerySELECT(Object entity, String attribute) throws NoSuchFieldException, InvocationTargetException, IllegalAccessException {
+        String field = getAttributeName(entity.getClass(), attribute);
 
         StringBuffer buffer = new StringBuffer();
         buffer.append("SELECT * FROM ").append(entity.getClass().getSimpleName());
         buffer.append(" WHERE ").append(field);
         buffer.append(" = ?");
+
+        return buffer.toString();
+    }
+
+    public static String createQuerySELECTMultipleParams(Object entity, HashMap<String, String> attributes) {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("SELECT * FROM ").append(entity.getClass().getSimpleName());
+        buffer.append(" WHERE ");
+
+        for (String attribute : attributes.keySet()) {
+            buffer.append(getAttributeName(entity.getClass(), attribute));
+            buffer.append(" = ? AND ");
+        }
+        buffer.setLength(buffer.length()-5);
 
         return buffer.toString();
     }
@@ -50,7 +62,7 @@ public class QueryHelper {
             buffer.append(field).append(" = ?, ");
         }
         buffer.setLength(buffer.length()-2);
-        buffer.append(" WHERE ").append(ObjectHelper.getIdAttributeName(entity.getClass())).append(" = ?");
+        buffer.append(" WHERE ").append(getAttributeName(entity.getClass(), "id")).append(" = ?");
 
         return buffer.toString();
     }
@@ -58,7 +70,7 @@ public class QueryHelper {
     public static String createQueryDELETE(Object entity) {
         StringBuffer buffer = new StringBuffer();
         buffer.append("DELETE FROM ").append(entity.getClass().getSimpleName());
-        buffer.append(" WHERE ").append(ObjectHelper.getIdAttributeName(entity.getClass())).append(" = ?");
+        buffer.append(" WHERE ").append(getAttributeName(entity.getClass(), "id")).append(" = ?");
 
         return buffer.toString();
     }

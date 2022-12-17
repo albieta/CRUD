@@ -14,7 +14,7 @@ public class ObjectHelperTest {
         String[] strings = ObjectHelper.getFields(user);
         Assert.assertEquals("userId", strings[0]);
         Assert.assertEquals("userName", strings[1]);
-        Assert.assertEquals(4, strings.length);
+        Assert.assertEquals(6, strings.length);
     }
 
     @Test
@@ -26,15 +26,21 @@ public class ObjectHelperTest {
 
     @Test
     public void testObjectGetter() throws NoSuchFieldException, IllegalAccessException, InvocationTargetException {
-        User user = new User("1A", "Alba", "Roma");
+        User user = new User("1A", "Alba", "Roma", "albaromagomez@gmail.com", "Test123");
         Object userName = ObjectHelper.getter(user, "userName");
         Assert.assertEquals("Alba", userName);
     }
 
     @Test
+    public void testGetAttributeName() {
+        String attributeName = ObjectHelper.getAttributeName(User.class, "id");
+        Assert.assertEquals("userId", attributeName);
+    }
+
+    @Test
     public void testAssertEqual() throws NoSuchFieldException, InvocationTargetException, IllegalAccessException {
-        User user1 = new User("1A", "Alba", "Roma");
-        User user2 = new User("1A", "Alba", "Roma");
+        User user1 = new User("1A", "Alba", "Roma", "albaromagomez@gmail.com", "Test123");
+        User user2 = new User("1A", "Alba", "Roma", "albaromagomez@gmail.com", "Test123");
 
         Assert.assertTrue(ObjectHelper.assertEqual(user1, user2));
     }
