@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -15,14 +16,14 @@ public class SessionImplTest {
     Session session;
 
     @Before
-    public void setUp() {
+    public void setUp() throws SQLException {
         this.session = FactorySession.openSession("jdbc:mariadb://localhost:3306/crud", "crud", "crud");
         this.session.deleteRecords(User.class);
         this.session.deleteRecords(Product.class);
     }
 
     @Test
-    public void testSaveObject() {
+    public void testSaveObject() throws SQLException {
         Product product = new Product("1A", "coses", 2.0, 3);
         this.session.save(product);
         List<Object> products = this.session.findAll(Product.class);
@@ -33,7 +34,7 @@ public class SessionImplTest {
     }
 
     @Test
-    public void testGetObject() throws NoSuchFieldException, InvocationTargetException, IllegalAccessException, InstantiationException {
+    public void testGetObject() throws NoSuchFieldException, InvocationTargetException, IllegalAccessException, InstantiationException, SQLException {
         Product p = new Product("1A", "coses", 2.0, 3);
         this.session.save(p);
         Product product = (Product) this.session.get(Product.class,"id", "1A");
@@ -42,7 +43,7 @@ public class SessionImplTest {
     }
 
     @Test
-    public void testGetUserByEmail() {
+    public void testGetUserByEmail() throws SQLException {
         User user = new User();
         user.setUserEmail("alba@gmail.com");
         this.session.save(user);
@@ -51,7 +52,7 @@ public class SessionImplTest {
     }
 
     @Test
-    public void testUpdateObject() {
+    public void testUpdateObject() throws SQLException {
         Product p = new Product("1A", "coses", 2.0, 3);
         this.session.save(p);
         Product product1 = (Product) this.session.get(Product.class, "id", "1A");
@@ -63,7 +64,7 @@ public class SessionImplTest {
     }
 
     @Test
-    public void testFindAllByHashmap() {
+    public void testFindAllByHashmap() throws SQLException {
         User userSaved = new User("1A", "Alba", "Roma", "albaromagomez@gmail.com", "Test123");
         this.session.save(userSaved);
         HashMap<String, String> fields = new HashMap<>();
@@ -78,7 +79,7 @@ public class SessionImplTest {
     }
 
     @Test
-    public void testDeleteObject() {
+    public void testDeleteObject() throws SQLException {
         Product p = new Product("1A", "coses", 2.0, 3);
         this.session.save(p);
         this.session.delete(p);

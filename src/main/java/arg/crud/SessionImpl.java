@@ -18,7 +18,7 @@ public class SessionImpl implements Session {
     }
 
     @Override
-    public void save(Object entity) {
+    public void save(Object entity) throws SQLException {
         try{
             String insertQuery = QueryHelper.createQueryINSERT(entity);
 
@@ -29,7 +29,7 @@ public class SessionImpl implements Session {
                 statement.setObject(i++, ObjectHelper.getter(entity, field));
             }
             statement.executeQuery();
-        } catch (SQLException | NoSuchFieldException | IllegalAccessException | InvocationTargetException e) {
+        } catch (NoSuchFieldException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
     }
@@ -40,7 +40,7 @@ public class SessionImpl implements Session {
     }
 
     @Override
-    public Object get(Class theClass, String attribute, String value) {
+    public Object get(Class theClass, String attribute, String value) throws SQLException {
         Object entity;
 
         try {
@@ -53,7 +53,7 @@ public class SessionImpl implements Session {
             entity = ObjectHelper.createObjects(statement.executeQuery(), theClass).get(0);
             assert entity != null;
 
-        } catch (ClassNotFoundException | SQLException | InstantiationException | IllegalAccessException | NoSuchFieldException | InvocationTargetException e) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchFieldException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
 
@@ -61,7 +61,7 @@ public class SessionImpl implements Session {
     }
 
     @Override
-    public void update(Object object) {
+    public void update(Object object) throws SQLException {
         try{
             String updateQuery = QueryHelper.createQueryUPDATE(object);
             PreparedStatement statement = conn.prepareStatement(updateQuery);
@@ -73,26 +73,26 @@ public class SessionImpl implements Session {
             statement.setObject(i, ObjectHelper.getter(object, ObjectHelper.getAttributeName(object.getClass(), "id")));
 
             statement.executeQuery();
-        } catch (SQLException | NoSuchFieldException | InvocationTargetException | IllegalAccessException e) {
+        } catch (NoSuchFieldException | InvocationTargetException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void delete(Object object) {
+    public void delete(Object object) throws SQLException {
         try{
             String updateQuery = QueryHelper.createQueryDELETE(object);
             PreparedStatement statement = conn.prepareStatement(updateQuery);
             statement.setObject(1, ObjectHelper.getter(object, ObjectHelper.getAttributeName(object.getClass(), "id")));
 
             statement.executeQuery();
-        } catch (SQLException | NoSuchFieldException | InvocationTargetException | IllegalAccessException e) {
+        } catch (NoSuchFieldException | InvocationTargetException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public List<Object> findAll(Class theClass) {
+    public List<Object> findAll(Class theClass) throws SQLException {
         String selectQuery = QueryHelper.createQuerySelectAll(theClass);
 
         PreparedStatement statement;
@@ -101,7 +101,7 @@ public class SessionImpl implements Session {
         try{
             statement = conn.prepareStatement(selectQuery);
             objects = ObjectHelper.createObjects(statement.executeQuery(), theClass);
-        } catch (SQLException | ClassNotFoundException | InstantiationException | IllegalAccessException |
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
                  NoSuchFieldException | InvocationTargetException e) {
             e.printStackTrace();
         }
@@ -109,7 +109,7 @@ public class SessionImpl implements Session {
     }
 
     @Override
-    public List<Object> findAll(Class theClass, HashMap<String, String> params) {
+    public List<Object> findAll(Class theClass, HashMap<String, String> params) throws SQLException{
         String selectQuery;
         try{
             selectQuery = QueryHelper.createQuerySELECTMultipleParams(theClass.newInstance(), params);
@@ -127,7 +127,7 @@ public class SessionImpl implements Session {
                 statement.setObject(i++, value);
             }
             objects = ObjectHelper.createObjects(statement.executeQuery(), theClass);
-        } catch (SQLException | NoSuchFieldException | ClassNotFoundException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+        } catch (NoSuchFieldException | ClassNotFoundException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
         return objects;
@@ -139,14 +139,11 @@ public class SessionImpl implements Session {
     }
 
     @Override
-    public void deleteRecords(Class theClass) {
+    public void deleteRecords(Class theClass) throws SQLException {
         String selectQuery = QueryHelper.createQueryDeleteRecords(theClass);
 
-        try{
-            PreparedStatement statement = conn.prepareStatement(selectQuery);
-            statement.executeQuery();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        PreparedStatement statement = conn.prepareStatement(selectQuery);
+        statement.executeQuery();
+
     }
 }
